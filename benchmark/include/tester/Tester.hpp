@@ -1,8 +1,7 @@
 #include <functional>
 #include <vector>
 #include <string>
-namespace pea
-{
+
 class Tester
 {
 public:
@@ -49,4 +48,3 @@ private:
   double runSingle();
   double runSingleData();
 };
-} // namespace sdizo

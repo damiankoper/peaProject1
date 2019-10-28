@@ -1,9 +1,8 @@
-#include "Tester.h"
+#include "tester/Tester.hpp"
 #include <chrono>
 #include <functional>
 #include <iostream>
 #include <fstream>
-using namespace pea;
 
 Tester::Tester()
 {
