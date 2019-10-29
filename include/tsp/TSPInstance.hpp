@@ -13,6 +13,8 @@ public:
     int routeDistance(std::vector<int> path);
     int pathDistance(int from, int to);
 
+    int getSize();
+
 private:
     int size;
     int **matrix;

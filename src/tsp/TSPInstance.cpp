@@ -76,3 +76,8 @@ int TSPInstance::pathDistance(int from, int to)
 {
     return matrix[from][to];
 }
+
+int TSPInstance::getSize()
+{
+    return size;
+}

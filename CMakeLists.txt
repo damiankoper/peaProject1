@@ -15,4 +15,3 @@ target_include_directories(main PUBLIC ${PROJECT_SOURCE_DIR}/include)
 #Benchmark
 add_executable(benchmark benchmark/src/benchmark ${BENCHMARK_SRC_FILES})
 target_include_directories(benchmark PUBLIC ${PROJECT_SOURCE_DIR}/benchmark/include)
-
