@@ -23,6 +23,5 @@ public:
     int pathDistance(int from, int to);
 
 private:
-    int size;
-    int **matrix;
+    Matrix matrix;
 };
