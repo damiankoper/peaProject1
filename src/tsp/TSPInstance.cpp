@@ -7,6 +7,7 @@
 
 TSPInstance::TSPInstance(std::istream &inputStream)
 {
+    size_t size;
     inputStream >> size;
 
     if (size < 3)
@@ -14,10 +15,9 @@ TSPInstance::TSPInstance(std::istream &inputStream)
         throw "TSP instance is too small!";
     }
 
-    matrix = new int *[size];
+    matrix = Matrix(size);
     for (size_t i = 0; i < size; i++)
     {
-        matrix[i] = new int[size];
         for (size_t j = 0; j < size; j++)
         {
             inputStream >> matrix[i][j];
@@ -29,35 +29,11 @@ TSPInstance::TSPInstance(std::istream &inputStream)
 
 TSPInstance::~TSPInstance()
 {
-    for (size_t i = 0; i < size; i++)
-    {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
 }
 
 void TSPInstance::print(std::ostream &outputStream)
 {
-    int maxChars = 0;
-    std::stringstream ss;
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            ss << matrix[i][j];
-            maxChars = std::max((int)ss.str().length(), maxChars);
-            ss.str("");
-        }
-    }
-
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            outputStream << std::setw(maxChars) << matrix[i][j] << " ";
-        }
-        outputStream << std::endl;
-    }
+    matrix.print(outputStream);
 }
 
 int TSPInstance::routeDistance(std::vector<int> path)
@@ -79,5 +55,5 @@ int TSPInstance::pathDistance(int from, int to)
 
 int TSPInstance::getSize()
 {
-    return size;
+    return matrix.getSize();
 }

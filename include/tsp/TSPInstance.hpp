@@ -1,7 +1,7 @@
 #pragma once
+#include "tsp/Matrix.hpp"
 #include <iostream>
 #include <vector>
-
 class TSPInstance
 {
 
@@ -16,6 +16,5 @@ public:
     int getSize();
 
 private:
-    int size;
-    int **matrix;
+    Matrix matrix;
 };
