@@ -4,14 +4,9 @@
 
 int main(int argc, char **argv)
 {
-  TSPInstance* tsp = new TSPInstance(std::cin);
-    
+  TSPInstance *tsp = new TSPInstance(std::cin);
+
   BruteForce bf = BruteForce();
-  std::cout << 
-    std::endl << 
-    tsp->routeDistance(
-      bf.solve(*tsp)
-    ) << 
-    std::endl;
+  bf.solve(*tsp).print(std::cout);
   return 0;
 }

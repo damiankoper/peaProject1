@@ -1,6 +1,12 @@
 #pragma once
+#include "tsp/Route.hpp"
 #include <iostream>
 #include <vector>
+#include <istream>
+#include <sstream>
+#include <math.h>
+#include <iomanip>
+#include <numeric>
 
 class TSPInstance
 {
@@ -8,12 +14,13 @@ class TSPInstance
 public:
     TSPInstance(std::istream &dataStream);
     ~TSPInstance();
-    
-    void print(std::ostream &outputStream);
-    int routeDistance(std::vector<int> path);
-    int pathDistance(int from, int to);
 
     int getSize();
+
+    void print(std::ostream &outputStream);
+
+    int routeDistance(Route &route);
+    int pathDistance(int from, int to);
 
 private:
     int size;

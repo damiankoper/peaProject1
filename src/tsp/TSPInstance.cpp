@@ -1,9 +1,5 @@
 #include "tsp/TSPInstance.hpp"
-#include <istream>
-#include <sstream>
-#include <math.h>
-#include <iomanip>
-#include <numeric>
+#include "tsp/Route.hpp"
 
 TSPInstance::TSPInstance(std::istream &inputStream)
 {
@@ -60,14 +56,14 @@ void TSPInstance::print(std::ostream &outputStream)
     }
 }
 
-int TSPInstance::routeDistance(std::vector<int> path)
+int TSPInstance::routeDistance(Route &route)
 {
     int distance = 0;
-    for (size_t i = 0; i < path.size() - 1; i++)
+    for (size_t i = 0; i < route.v.size() - 1; i++)
     {
-        distance += pathDistance(path.at(i), path.at(i + 1));
+        distance += pathDistance(route.v.at(i), route.v.at(i + 1));
     }
-    distance += pathDistance(path.at(path.size() - 1), path.at(0));
+    distance += pathDistance(route.v.at(route.v.size() - 1), route.v.at(0));
 
     return distance;
 }
