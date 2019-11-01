@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-
+#include <vector>
 class Matrix
 {
 
@@ -9,15 +9,15 @@ public:
     Matrix(size_t size);
     ~Matrix();
 
-    int *operator[](size_t i);
+    std::vector<int> &operator[](size_t i);
     Matrix &operator=(const Matrix &matrix);
-    
+
     int getSize();
 
     void print(std::ostream &outputStream);
 
 private:
     void createArray(size_t size);
-    int **m = nullptr;
+    std::vector<std::vector<int>> m;
     int size = 0;
 };

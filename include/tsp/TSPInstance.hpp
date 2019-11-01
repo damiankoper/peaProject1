@@ -1,5 +1,6 @@
 #pragma once
 #include "tsp/Route.hpp"
+#include "tsp/Matrix.hpp"
 #include <iostream>
 #include <vector>
 #include <istream>
@@ -22,6 +23,5 @@ public:
     int routeDistance(Route &route);
     int pathDistance(int from, int to);
 
-private:
     Matrix matrix;
 };

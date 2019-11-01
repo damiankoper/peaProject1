@@ -2,6 +2,9 @@
   "latex-workshop.latex.outDir": "%DIR%/../out",
   "files.associations": {
     "*.view": "html",
+    "*.php": "php",
+    ".blade.php": "html",
+    ".tpl": "html",
     "*.blade.*": "blade",
     "fstream": "cpp",
     "array": "cpp",
@@ -48,6 +51,12 @@
     "sstream": "cpp",
     "stdexcept": "cpp",
     "streambuf": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "condition_variable": "cpp",
+    "map": "cpp",
+    "iomanip": "cpp",
+    "mutex": "cpp",
+    "thread": "cpp",
+    "cinttypes": "cpp"
   },
 }

@@ -16,7 +16,9 @@ TSPInstance::TSPInstance(std::istream &inputStream)
     {
         for (size_t j = 0; j < size; j++)
         {
-            inputStream >> matrix[i][j];
+            int temp;
+            inputStream >> temp;
+            matrix[i][j] = temp;
             if (i == j)
                 matrix[i][j] = -1;
         }
