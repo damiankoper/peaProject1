@@ -33,11 +33,12 @@ Route DP::solve(TSPInstance &tsp)
 
   displayV(opt);
 
-  int result = subCompute(0, 0b111, tsp);
+  int result = subCompute(0, (1 << tsp.getSize() - 1) - 1, tsp);
 
   displayV(opt);
 
   Route r = Route();
+  r.v.push_back(0);
   return r;
 }
 
