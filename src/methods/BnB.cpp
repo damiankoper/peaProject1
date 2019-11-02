@@ -46,7 +46,7 @@ Route BnB::solve(TSPInstance &tsp)
           deeperSolution.matrix[from][i] = -1;  
           deeperSolution.matrix[i][to] = -1;            
         }
-        
+        deeperSolution.matrix[to][from] = -1;
         deeperSolution.route.v.push_back(to);
         deeperSolution.lowerBound += 
           deeperSolution.reduce() + 
