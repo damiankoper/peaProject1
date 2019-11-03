@@ -25,6 +25,11 @@ TSPInstance::TSPInstance(std::istream &inputStream)
     }
 }
 
+TSPInstance::TSPInstance(int size, int min, int max)
+{
+    matrix = Matrix::createRandom(size, min, max);
+}
+
 TSPInstance::~TSPInstance()
 {
 }

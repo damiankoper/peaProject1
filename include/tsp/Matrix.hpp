@@ -16,6 +16,8 @@ public:
 
     void print(std::ostream &outputStream);
 
+    static Matrix createRandom(int size, int min, int max);
+
 private:
     void createArray(size_t size);
     std::vector<std::vector<int>> m;

@@ -58,3 +58,16 @@ void Matrix::print(std::ostream &outputStream)
     outputStream << std::endl;
   }
 }
+
+Matrix Matrix::createRandom(int size, int min, int max)
+{
+  Matrix matrix = Matrix(size);
+  for (size_t i = 0; i < size; i++)
+  {
+    for (size_t j = 0; j < size; j++)
+    {
+      matrix[i][j] = min + rand() % (max - min);
+    }
+  }
+  return matrix;
+}

@@ -14,6 +14,7 @@ class TSPInstance
 
 public:
     TSPInstance(std::istream &dataStream);
+    TSPInstance(int size, int min = 0, int max = 100);
     ~TSPInstance();
 
     int getSize();
