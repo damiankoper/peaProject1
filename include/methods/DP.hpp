@@ -16,5 +16,7 @@ public:
 
 private:
     std::vector<std::vector<int>> opt; // g(i, S) -> g(int, {0b000000})
+    std::vector<std::vector<int>> path;
+    Route route;
     int subCompute(int i, Set S, TSPInstance &tsp);
 };
