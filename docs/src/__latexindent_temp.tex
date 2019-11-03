@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+\usepackage{scrextend}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}%polskie znaki
+\usepackage[utf8]{inputenc}%polskie znaki
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{tabulary}
+\usepackage{etoc}
+\usepackage[normalem]{ulem} 
+\renewcommand{\baselinestretch}{1.5}
+\graphicspath{ {img/} }
+\newgeometry{lmargin=2.0cm, rmargin=2.0cm, tmargin=2.0cm, bmargin=2.0cm}
+\usepackage{tikz}
+\usepackage[bf]{caption}
+\usepackage{pgfplots}
+
+
+\title{ 
+    \vspace*{50mm}
+    \textsc{
+        \textbf{Projektowanie efektywnych algorytmów}\\
+        \large Projekt 1
+    }
+} 
+\author{
+Damian Koper,  241292\\
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\setcounter{tocdepth}{2}
+\localtableofcontents
+\newpage
+\begin{figure}[]
+    \centering
+    
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.9\linewidth,
+    height=7cm,
+    grid=major,
+    xlabel=N,
+    ylabel=T{[s]},
+    xticklabel={%
+        \pgfmathtruncatemacro{\IntegerTick}{\tick}%
+        \pgfmathprintnumberto[verbatim,fixed,precision=3]{\tick}\tickAdjusted%
+        \pgfmathparse{\IntegerTick == \tickAdjusted ? 1: 0}%
+        \ifnum\pgfmathresult>0\relax$\IntegerTick$\else\fi%
+    },
+    ytick={0,0.002,...,0.02}
+]
+\addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BruteForce.csv};
+\end{axis}
+\end{tikzpicture}
+\label{XDDD}
+
+\caption{}
+\label{}
+\end{figure}
+\end{document}

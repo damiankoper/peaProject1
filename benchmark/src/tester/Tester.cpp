@@ -92,9 +92,10 @@ Tester *Tester::writeLastToFile(std::string name)
 {
     std::ofstream myfile;
     myfile.open(name);
+    myfile << "startElements, time" << std::endl;
     for (auto testResult : lastResults)
     {
-        myfile << testResult.startElements << ",";
+        //myfile << testResult.startElements << ",";
         myfile << testResult.activeElements << ",";
         myfile << testResult.time << ",";
         myfile << std::endl;

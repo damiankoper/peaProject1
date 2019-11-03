@@ -72,8 +72,15 @@ int main(int argc, char **argv)
         delete tsp;
       }
       f.open("data/" + input + ".txt", std::ios::in);
-      tsp = new TSPInstance(f);
-      f.close();
+      if (f.fail())
+      {
+        buff << "Błąd otwierania pliku!";
+      }
+      else
+      {
+        tsp = new TSPInstance(f);
+        f.close();
+      }
       break;
     case Menu::randomm:
       std::cout << "Podaj ilość miast: ";

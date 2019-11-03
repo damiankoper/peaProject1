@@ -17,6 +17,7 @@
 \newgeometry{lmargin=2.0cm, rmargin=2.0cm, tmargin=2.0cm, bmargin=2.0cm}
 \usepackage{tikz}
 \usepackage[bf]{caption}
+\usepackage{pgfplots}
 
 
 \title{ 
@@ -41,5 +42,40 @@ Damian Koper,  241292\\
 \localtableofcontents
 \newpage
 
+\newcommand{\threeplot}[3]{
+    \begin{figure}[h]
+        \centering        
+        \begin{tikzpicture}
+            \begin{#1}[
+                width=0.9\linewidth,
+                height=7cm,
+                grid=major,
+                xlabel=N,
+                ylabel=T{[s]},
+                xticklabel={%
+                    \pgfmathtruncatemacro{\IntegerTick}{\tick}%
+                    \pgfmathprintnumberto[verbatim,fixed,precision=3]{\tick}\tickAdjusted%
+                    \pgfmathparse{\IntegerTick == \tickAdjusted ? 1: 0}%
+                    \ifnum\pgfmathresult>0\relax$\IntegerTick$\else\fi%
+                },
+                legend style={#3}
+            ]
+            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BruteForce.csv};
+            \addlegendentry{Brute Force}
+            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BnB.csv};
+            \addlegendentry{BnB}
+            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/DP.csv};
+            \addlegendentry{DP}
+            \end{#1}
+        \end{tikzpicture}
+        \caption{#2}
+    \end{figure}
+}
+\threeplot{axis}
+{Porównanie czasów wykonania dla trzech metod.}
+{anchor=north west, at={(0,1)}}
+\threeplot{semilogyaxis}
+{Porównanie czasów wykonania dla trzech metod. Skala logarytmiczna.}
+{anchor=south east, at={(1,0)}}
 
 \end{document}
