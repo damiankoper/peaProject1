@@ -28,6 +28,10 @@ TSPInstance::TSPInstance(std::istream &inputStream)
 TSPInstance::TSPInstance(int size, int min, int max)
 {
     matrix = Matrix::createRandom(size, min, max);
+    for (size_t i = 0; i < size; i++)
+    {
+        matrix[i][i] = -1;
+    }
 }
 
 TSPInstance::~TSPInstance()
