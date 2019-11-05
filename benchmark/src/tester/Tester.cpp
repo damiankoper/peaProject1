@@ -97,7 +97,7 @@ Tester *Tester::writeLastToFile(std::string name)
     {
         //myfile << testResult.startElements << ",";
         myfile << testResult.activeElements << ",";
-        myfile << testResult.time << ",";
+        myfile << testResult.time;
         myfile << std::endl;
     }
 

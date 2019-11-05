@@ -66,7 +66,8 @@
   ],
   "spellright.documentTypes": [
     "markdown",
-    "latex",
-    "plaintext"
+    "plaintext",
+    "latex"
   ],
+  "editor.wordWrap": "bounded"
 }

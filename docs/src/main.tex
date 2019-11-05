@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{amssymb}
 \usepackage{scrextend}
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
@@ -16,17 +17,53 @@
 \graphicspath{ {img/} }
 \newgeometry{lmargin=2.0cm, rmargin=2.0cm, tmargin=2.0cm, bmargin=2.0cm}
 \usepackage{tikz}
-\usepackage[bf]{caption}
+\usepackage[bf, tablename=Tabela]{caption}
 \usepackage{pgfplots}
+\usepackage{csvsimple}
+\usepackage{pgfplotstable}
+\usepackage{siunitx}
+\pgfplotsset{compat=1.16}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{listings}
 
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.98}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
 
 \title{ 
     \vspace*{50mm}
     \textsc{
         \textbf{Projektowanie efektywnych algorytmów}\\
-        \large Projekt 1
-    }
-} 
+    \vspace*{10mm}
+    \large Projekt\\
+        }
+        \normalsize
+         Metoda przegląd zupełnego, Branch and Bound i programowania dynamicznego dla asynchronicznego problemu komiwojażera. 
+         \vspace*{5mm}
+         } 
 \author{
 Damian Koper,  241292\\
 }
@@ -40,40 +77,195 @@ Damian Koper,  241292\\
 \newpage
 \setcounter{tocdepth}{2}
 \localtableofcontents
+\listoffigures
+\listoftables
+\vfill
+Kod i wersje wykonywalne programów: \url{https://github.com/damiankoper/peaProject1}
 \newpage
 
-\newcommand{\threeplot}[3]{
-    \begin{figure}[h]
-        \centering        
+\section{Wstęp}
+Celem projektu było wykonanie programu, który rozwiązywał będzie asynchroniczny
+problem komiwojażera z wykorzystaniem metod przeglądu zupełnego,
+\textit{Branch and Bound} i programowania dynamicznego.
+\section{Problem komiwojażera i metody obliczeń}
+Asynchroniczny problem komiwojażera (ATSP - Asynchronous Travelling Salesman Problem) jest problemem optymalizacyjnym należącym do klasy NP-trudnych.
+Polega on na znalezieniu najkrótszego cyklu Hamiltona w skierowanym grafie ważonym. Instancja problemu reprezentowana jest przez macierz sąsiedztwa, która na
+przekątnej ma wartości $-1$.
+\subsection{Przegląd zupełny}
+Przegląd zupełny (\textit{Brute Force}) polega na wygenerowaniu wszystkich permutacji (czyli możliwych kolejności odwiedzenia wszystkich miast) i sprawdzenia,
+która z nich generuje najmniejszy koszt. Metoda ta jest najbardziej kosztowna obliczeniowo cechując się złożonością $O(n!)$.
+
+\subsection{Branch and Bound}
+Metoda Branch and Bound polega na analizowaniu tylko najbardziej obiecującej gałęzi przestrzeni rozwiązań problemu. Jest to metoda dokładna, która wykorzystuje obliczone górne i dolne ograniczenia. Za pomocą kolejki priorytetowej analizowane i uaktualniane są kolejne gałęzie rozwiązania. Ze względu na to, że podczas obliczeń wszystkie kolejne rozwiązania mogą być lepsze od poprzednich, metoda ta w pesymistycznym przypadku sprowadza się do przeglądu zupełnego ze złożonością $O(n!)$.
+Zaimplementowany algorytm liczy dolne ograniczenie poprzez dodanie do obecnego kosztu najmniejszej sumy kosztów krawędzi, do których można przejść z danego punktu.
+
+\subsection{Programowanie dynamiczne}
+Programowanie dynamiczne (\textit{Dynamic programming}) w znacznym stopniu wykorzystuje zasoby pamięciowe. Jako, że problem komiwojażera możemy podzielić na optymalne podstruktury, to możemy również zapisać wyniki obliczeń dla tych struktur i wykorzystać je jako składowe kolejnych obliczeń. Algorytmem rozwiązującym problem komiwojażera jest algorytm Bellmana-Helda-Karpa. Dla problemu komiwojażera możemy wyróżnić $2^n \cdot n$ problemów, co przekłada się na złożoność czasową równą $O(2^n \cdot n^2)$ i pamięciową $O(2^n \cdot n)$.
+
+\subsubsection{Algorytm Bellmana-Helda-Karpa}
+Rozważamy instancję problemu komiwojażera rozmiaru $N=4$ reprezentowanego przez daną macierz sąsiedztwa:
+$$
+    \begin{pmatrix}
+        -1 & 87 & 27 & 22 \\
+        80 & -1 & 92 & 58 \\
+        51 & 83 & -1 & 64 \\
+        25 & 79 & 69 & -1
+    \end{pmatrix}
+$$
+
+Algorytm zakłada rekurencyjne generowanie wyników dla podstruktur i pobieranie wyniku, gdy ta podstruktura została już wcześniej przeanalizowana. Jako podstrukturę określa się ścieżkę i jej koszt dla podróży z początkowego wierzchołka do danego innego wierzchołka przechodząc jednocześnie przez inne, określone wierzchołki. Oznaczenia:
+\begin{itemize}
+    \item $g(v, S)$ - zaczynając od wierzchołka startowego, optymalny koszt przejścia do wierzchołka $v$ przechodząc przez wierzchołki ze zbioru $S$.
+    \item $c_{ij}$ - koszt przejścia z wierzchołka $v_i$ do wierzchołka $v_j$, waga krawędzi.
+    \item $p(v, S)$ - poprzedni wierzchołek dla wyniku podstruktury. Wartość używana do skonstruowania wynikowej ścieżki.
+\end{itemize}
+
+Wynikiem pożądanym jest wynik przejścia z wierzchołka początkowego do początkowego  przez wszystkie pozostałe wierzchołki. Należy zatem obliczyć wartość dla funkcji:
+\begin{equation}
+    g(v, S) = \min_{k\in S}{\set{c_{vk}+g(k, S\setminus \set{k})}}
+\end{equation}
+z odpowiednimi parametrami dla rozważanego problemu:
+\begin{equation}
+    g(1, \{2,3,4\}) = \min{\set{c_{12}+g(2, \set{3,4}),\, c_{13}+g(3, \set{2,4}),\, c_{14}+g(4, \set{2,3})}}
+\end{equation}
+Schodząc głębiej w wywołania rekurencyjne dojdziemy do przypadków końcowych:
+\begin{subequations}
+    \label{eq:3}
+    \begin{gather}
+        g(2, \varnothing) = c_{21} = 80\\
+        g(3, \varnothing) = c_{31} = 51\\
+        g(4, \varnothing) = c_{41} = 25
+    \end{gather}
+\end{subequations}
+Wyniki z obliczeń na podstawie równań \ref{eq:3} użyte zostaną do obliczeń zewnętrznych wywołań:
+\begin{subequations}
+    \label{eq:4}
+    \begin{align}
+        g(3, \set{2}) = c_{32} + g(2, \varnothing) & = 83 + 80 = 163 & p(3, \set{2}) & = 2 \\
+        g(4, \set{2}) = c_{42} + g(2, \varnothing) & = 79 + 80 = 159 & p(4, \set{2}) & = 2 \\
+        g(2, \set{3}) = c_{23} + g(3, \varnothing) & = 92 + 51 = 143 & p(2, \set{3}) & = 3 \\
+        g(4, \set{3}) = c_{43} + g(3, \varnothing) & = 69 + 51 = 120 & p(4, \set{3}) & = 3 \\
+        g(2, \set{4}) = c_{24} + g(4, \varnothing) & = 58 + 25 = 83  & p(2, \set{4}) & = 4 \\
+        g(3, \set{4}) = c_{34} + g(4, \varnothing) & = 64 + 25 = 89  & p(3, \set{4}) & = 4
+    \end{align}
+\end{subequations}
+Następnie wyniki z obliczeń na podstawie równań \ref{eq:4} użyte zostaną do obliczeń kolejnych zewnętrznych wywołań:
+\begin{subequations}
+    \begin{align}
+        g(4, \set{2,3}) = \min{\set{c_{42} + g(2, \set{3}),\,c_{43} + g(3, \set{2})}} & = 222 & p(4, \set{2,3}) & = 2 \\
+        g(3, \set{2,4}) = \min{\set{c_{32} + g(2, \set{4}),\,c_{34} + g(4, \set{2})}} & = 166 & p(3, \set{2,4}) & = 2 \\
+        g(2, \set{3,4}) = \min{\set{c_{23} + g(3, \set{4}),\,c_{24} + g(4, \set{3})}} & = 178 & p(2, \set{3,4}) & = 4
+    \end{align}
+\end{subequations}
+Uzyskane wyniki pozwalają obliczyć końcowy koszt oraz ścieżkę.
+\begin{align}
+    g(1, \set{2,3,4}) & = \min\set{c_{12}+g(2, \set{3,4}),\,c_{13}+g(3, \set{2,4}),\,c_{14}+g(4, \set{2,3})}\nonumber \\
+                      & = \min{\set{87+222,\,27+166,\,22+178}}                                                        \\
+                      & = \min{\set{309,\,193,\,200}} = 193 \nonumber                                                 \\
+    p(1, \set{2,3,4}) & = 3
+\end{align}
+Znaleziona ścieżka o koszcie 193 jest następująca:
+$ 1 \rightarrow 3 \rightarrow 2 \rightarrow 4 \rightarrow 1 $
+\section{Pomiary}
+Algorytmy i system pomiarowy zostały zaimplementowane wykorzystując podejście obiektowe, elementy biblioteki \textit{STL} i wersję \textit{C++17}.
+W celu zautomatyzowania testowania została stworzona klasa \lstinline{Tester}, która poprzez wyrażenia lambda jest szybko konfigurowana do pracy z nowymi przypadkami testowymi. Pomiary zostały przeprowadzone wykorzystując klasę biblioteki standardowej \lstinline{std::chrono::high_resolution_clock}.
+
+Parametrami pomiaru są zawsze rozmiar problemu $N$ oraz testowany algorytm. Testy przeprowadzono dla kolejnych możliwych rozmiarów problemu zaczynając od 4, a kończąc na wartości, dla której wykonanie algorytmu przekraczało empirycznie ustalony czas. Dla każdego rozmiaru problemu wykonano 100 pomiarów, których czasy wykonania następnie uśredniono. Wartości macierzy sąsiedztwa dla instancji problemu były generowana losowo z przedziału $<0,100>$
+
+
+\newcommand{\oneplot}[3]{
+    \begin{figure}[H]
+        \centering
         \begin{tikzpicture}
-            \begin{#1}[
+            \begin{axis}[
                 width=0.9\linewidth,
                 height=7cm,
                 grid=major,
                 xlabel=N,
                 ylabel=T{[s]},
                 xticklabel={%
-                    \pgfmathtruncatemacro{\IntegerTick}{\tick}%
-                    \pgfmathprintnumberto[verbatim,fixed,precision=3]{\tick}\tickAdjusted%
-                    \pgfmathparse{\IntegerTick == \tickAdjusted ? 1: 0}%
-                    \ifnum\pgfmathresult>0\relax$\IntegerTick$\else\fi%
-                },
-                legend style={#3}
-            ]
-            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BruteForce.csv};
-            \addlegendentry{Brute Force}
-            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BnB.csv};
-            \addlegendentry{BnB}
-            \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/DP.csv};
-            \addlegendentry{DP}
-            \end{#1}
+                        \pgfmathtruncatemacro{\IntegerTick}{\tick}%
+                        \pgfmathprintnumberto[verbatim,fixed,precision=3]{\tick}\tickAdjusted%
+                        \pgfmathparse{\IntegerTick == \tickAdjusted ? 1: 0}%
+                        \ifnum\pgfmathresult>0\relax$\IntegerTick$\else\fi%
+                    },
+                legend style={anchor=north west, at={(0,1)}}
+                ]
+                \addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/#1.csv};
+                \addlegendentry{#2}
+            \end{axis}
         \end{tikzpicture}
-        \caption{#2}
+        \caption{Średnie czasy wykonania algorytmu wykorzystującego metodę #3}
     \end{figure}
 }
+
+\newcommand{\threeplot}[3]{
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{#1}[
+width=0.9\linewidth,
+height=7cm,
+grid=major,
+xlabel=N,
+ylabel=T{[s]},
+xticklabel={%
+        \pgfmathtruncatemacro{\IntegerTick}{\tick}%
+        \pgfmathprintnumberto[verbatim,fixed,precision=3]{\tick}\tickAdjusted%
+        \pgfmathparse{\IntegerTick == \tickAdjusted ? 1: 0}%
+        \ifnum\pgfmathresult>0\relax$\IntegerTick$\else\fi%
+    },
+legend style={#3}
+]
+\addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BruteForce.csv};
+\addlegendentry{Brute Force}
+\addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/BnB.csv};
+\addlegendentry{Branch and Bound}
+\addplot table [x=startElements, y=time, col sep=comma] {./../../benchmark/DP.csv};
+\addlegendentry{Dynamic Programming}
+\end{#1}
+\end{tikzpicture}
+\caption{#2}
+\label{threeplot:#1}
+\end{figure}
+}
+
+\newcommand{\methodtable}[2]{
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|c|S[ group-minimum-digits = 10, round-mode=figures, round-precision=5, scientific-notation=false, table-format=1.5e2]|}
+            \hline
+            \textbf{Rozmiar $N$} & \textbf{Czas $T{[s]}$}
+            \csvreader[head to column names]
+            {./../../benchmark/#1.csv}{}
+            {                                                                  \\\hline\startElements & \time}\\
+            \hline
+        \end{tabular}
+        \caption{Średnie czasy wykonania algorytmu wykorzystującego metodę \textit{#2}.}
+    \end{table}
+}
+
+\subsection{Przegląd zupełny}
+Metoda przeglądu zupełnego cechuje się dużym wzrostem czasu wykonania już dla $N \geqslant 9$.
+\methodtable{BruteForce}{BruteForce}
+\oneplot{BruteForce}{Brute Force}{BruteForce}
+
+\subsection{Branch and Bound}
+Metoda Branch and Bound cechuje się lepszą średnią złożonością czasową od przeglądu zupełnego. Dla pesymistycznego przypadku złożoność ta sprowadza się jednak do przypadku przeglądu zupełnego.
+
+\methodtable{BnB}{Branch and Bound}
+\oneplot{BnB}{Branch and Bound}{Branch and Bound}
+
+\subsection{Programowanie dynamiczne}
+\methodtable{DP}{Dynamic Programming}
+\oneplot{DP}{Dynamic programming}{programowania dynamicznego}
+
+\section{Podsumowanie}
+Wśród wszystkich trzech metod dokładnych widać przewagę metody programowania dynamicznego. Ten nieznaczący w dużej skali zysk czasowy okupiony jest jednak wysokim zużyciem pamięci.
 \threeplot{axis}
 {Porównanie czasów wykonania dla trzech metod.}
 {anchor=north west, at={(0,1)}}
+Rysunek \ref{threeplot:semilogyaxis} przedstawia porównanie czasów wykonania w skali logarytmicznej dobrze pokazując różne, eksponencjalne tempo wzrostu dla każdej z metod. Eksponencjalne tempo wzrostu czasu wykonania cechuje wszystkie trzy przeanalizowane metody. Metoda programowania dynamicznego jest najszybszą oraz najbardziej przewidywalną z metod niezależącą od wag krawędzi.
 \threeplot{semilogyaxis}
 {Porównanie czasów wykonania dla trzech metod. Skala logarytmiczna.}
 {anchor=south east, at={(1,0)}}

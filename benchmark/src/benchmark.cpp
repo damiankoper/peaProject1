@@ -35,6 +35,6 @@ int main(int argc, char **argv)
 {
   test(new BruteForce(), "BruteForce", 9);
   test(new BnB(), "BnB", 15);
-  test(new DP(), "DP", 15);
+  test(new DP(), "DP", 17);
   return 0;
 }
