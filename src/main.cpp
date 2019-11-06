@@ -70,6 +70,7 @@ int main(int argc, char **argv)
       if (tsp != nullptr)
       {
         delete tsp;
+        tsp = nullptr;
       }
       f.open("data/" + input + ".txt", std::ios::in);
       if (f.fail())
@@ -88,6 +89,7 @@ int main(int argc, char **argv)
       if (tsp != nullptr)
       {
         delete tsp;
+        tsp = nullptr;
       }
       tsp = new TSPInstance(menuSelect);
       break;
