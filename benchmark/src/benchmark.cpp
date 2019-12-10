@@ -11,7 +11,34 @@ void test(TSPInstanceSolver *solver, std::string name, int n = 8)
   tester.log = name + ": ";
   tester.testEnv.startElements = 4;
   tester.testEnv.activeElements = 4;
-  tester.setOverallRepeats(n-3)
+  tester.setOverallRepeats(n - 3)
+      ->setSameDataRepeats(100)
+      ->beforeEach([&tsp](Tester::TestEnv &testEnv) {
+        if (tsp != nullptr)
+          delete tsp;
+        tsp = new TSPInstance(testEnv.activeElements);
+      })
+      ->setTestedFn([&solver, &tsp](Tester::TestEnv &testEnv) {
+        solver->solve(*tsp);
+      })
+      ->afterSameDataSet([](Tester::TestEnv &testEnv) {
+        testEnv.activeElements++;
+      });
+  tester.runAll();
+  tester.writeLastToFile("benchmark/" + name + ".csv");
+
+  if (tsp != nullptr)
+    delete tsp;
+}
+
+void test2(TSPInstanceSolver *solver, std::string name, int n = 8)
+{
+  TSPInstance *tsp = nullptr;
+  Tester tester = Tester();
+  tester.log = name + ": ";
+  tester.testEnv.startElements = 4;
+  tester.testEnv.activeElements = 4;
+  tester.setOverallRepeats(n - 3)
       ->setSameDataRepeats(100)
       ->beforeEach([&tsp](Tester::TestEnv &testEnv) {
         if (tsp != nullptr)
@@ -33,8 +60,12 @@ void test(TSPInstanceSolver *solver, std::string name, int n = 8)
 
 int main(int argc, char **argv)
 {
-  test(new BruteForce(), "BruteForce", 9);
+  /*  test(new BruteForce(), "BruteForce", 9);
   test(new BnB(), "BnB", 15);
-  test(new DP(), "DP", 17);
+  test(new DP(), "DP", 17); */
+
+  test2(, "BruteForce", 9);
+  test2(, "BnB", 15);
+  test2(, "DP", 17);
   return 0;
 }

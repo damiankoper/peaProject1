@@ -1,6 +1,10 @@
 #include "methods/Move.hpp"
 
+Move::~Move()
+{
+}
 
-Move::~Move() {
-
+bool Move::operator==(const Move &move)
+{
+    return move.a == a || move.b == b;
 }

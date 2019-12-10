@@ -1,35 +1,32 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build main",
-            "type": "shell",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "linux": {
-                "command": "bash"
-            },
-            "args": [
-                "-c",
-                "make main"
-            ]
-        },
-        {
-            "label": "build benchmark",
-            "type": "shell",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "linux": {
-                "command": "bash"
-            },
-            "args": [
-                "-c",
-                "make benchmark"
-            ]
-        }
-    ]
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceRoot}/build"
+  },
+  "tasks": [
+    {
+      "label": "build main",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "linux": {
+        "command": "bash"
+      },
+      "args": ["-c", "make main -j 8"]
+    },
+    {
+      "label": "build benchmark",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "linux": {
+        "command": "bash"
+      },
+      "args": ["-c", "make benchmark -j 8"]
+    }
+  ]
 }

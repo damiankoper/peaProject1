@@ -1,35 +1,35 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug main",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/main",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
-            "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "build main",
-            "linux": {
-                "MIMode": "gdb"
-            }
-        },
-        {
-            "name": "Debug benchmark",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/benchmark",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
-            "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "build benchmark",
-            "linux": {
-                "MIMode": "gdb"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug main",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/main",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "environment": [],
+      "externalConsole": false,
+      "preLaunchTask": "build main",
+      "linux": {
+        "MIMode": "gdb"
+      }
+    },
+    {
+      "name": "Debug benchmark",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/benchmark",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "environment": [],
+      "externalConsole": false,
+      "preLaunchTask": "build benchmark",
+      "linux": {
+        "MIMode": "gdb"
+      }
+    }
+  ]
 }
