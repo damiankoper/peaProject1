@@ -5,8 +5,13 @@ class SwapMove : public Move
 {
 
 public:
-    SwapMove(int a, int b) : Move(a,b) {}
+    SwapMove(int a, int b) : Move(a, b) {}
     ~SwapMove();
 
     void make(Route &route);
+
+    static std::string getName()
+    {
+        return "swap";
+    }
 };

@@ -4,6 +4,8 @@
 #include "methods/ReverseMove.hpp"
 #include "methods/Greedy.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 template <typename Move>
 TabuSearch<Move>::~TabuSearch()
 {
@@ -12,6 +14,11 @@ TabuSearch<Move>::~TabuSearch()
 template <typename Move>
 Route TabuSearch<Move>::solve(TSPInstance &tsp)
 {
+    std::ofstream myfile;
+    std::stringstream ss;
+    ss << "TS_" << tsp.getSize() << "_" << time << "_" << Move::getName() << ".csv";
+    myfile.open(ss.str());
+
     Greedy greedy = Greedy();
     Route best = greedy.solve(tsp);
     int bestRouteDistance = tsp.routeDistance(best);
@@ -51,13 +58,15 @@ Route TabuSearch<Move>::solve(TSPInstance &tsp)
         {
             bestRouteDistance = localBest.distance;
             std::cout << "Nowe rozwiązanie: " << bestRouteDistance << std::endl;
+            myfile << i << "," << localBest.distance << std::endl;
             addToTabu(localBest);
             best = localBest.route;
         }
         processTabu();
         decreaseTabu();
     }
-
+    best.print(myfile);
+    myfile.close();
     return best;
 }
 

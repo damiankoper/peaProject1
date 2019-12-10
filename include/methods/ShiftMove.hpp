@@ -5,8 +5,12 @@ class ShiftMove : public Move
 {
 
 public:
-    ShiftMove(int a, int b) : Move(a,b) {}
+    ShiftMove(int a, int b) : Move(a, b) {}
     ~ShiftMove();
 
     void make(Route &route);
+    static std::string getName()
+    {
+        return "shift";
+    }
 };

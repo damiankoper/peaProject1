@@ -5,8 +5,12 @@ class ReverseMove : public Move
 {
 
 public:
-    ReverseMove(int a, int b) : Move(a,b) {}
+    ReverseMove(int a, int b) : Move(a, b) {}
     ~ReverseMove();
 
     void make(Route &route);
+    static std::string getName()
+    {
+        return "reverse";
+    }
 };

@@ -3,6 +3,7 @@
 #include "methods/BnB.hpp"
 #include "methods/DP.hpp"
 #include "methods/TabuSearch.hpp"
+#include "methods/SA.hpp"
 #include "methods/SwapMove.hpp"
 #include "methods/ShiftMove.hpp"
 #include "methods/ReverseMove.hpp"
@@ -19,6 +20,8 @@ enum Menu
   dp,
   tabuParams,
   tabu,
+  saParams,
+  sa,
 };
 
 enum NHood
@@ -54,6 +57,8 @@ void displayMenu()
   std::cout << "[5] Held-Karp" << std::endl;
   std::cout << "[6] Parametry TabuSearch" << std::endl;
   std::cout << "[7] TabuSearch" << std::endl;
+  std::cout << "[8] Parametry SA" << std::endl;
+  std::cout << "[9] SA" << std::endl;
 }
 
 void solve(TSPInstance *tsp, TSPInstanceSolver *solver, std::stringstream &buff)
@@ -81,11 +86,16 @@ int main(int argc, char **argv)
   std::string input;
   std::string filename = "";
 
-  int tabuTime = 10000;
-  int tabuSize = 10;
-  int moveTime = 100;
-
+  int tabuTime = 1000000;
+  int tabuSize = 12;
+  int moveTime = 47;
   NHood nhood = swap;
+
+  int saT = 1000;
+  float saTk = 0.01;
+  float saa = 0.9999;
+  NHood SAnhood = swap;
+
   while (!exitt)
   {
     system("clear");
@@ -94,12 +104,21 @@ int main(int argc, char **argv)
     if (tsp != nullptr && tsp->getSize() < 20)
       tsp->print(std::cout);
     std::cout << buff.str() << std::endl;
+
     std::cout << "TabuSearch - rozmiar listy: " << tabuSize
               << ", liczba iteracji: " << tabuTime
               << ", liczba iteracji dla ruchu(kadencja): " << moveTime << std::endl
               << "Sąsiedztwo: ";
     printNHood(nhood);
     std::cout << std::endl;
+
+    std::cout << "SA - temp początkowa: " << saT
+              << ", temp końcowa: " << saTk
+              << ", wsp a: " << saa << std::endl
+              << "Sąsiedztwo: ";
+    printNHood(SAnhood);
+    std::cout << std::endl;
+
     buff.str("");
     displayMenu();
     std::cin >> menuSelect;
@@ -180,6 +199,41 @@ int main(int argc, char **argv)
         break;
       case NHood::reverse:
         solve(tsp, new TabuSearch<ReverseMove>(tabuTime, tabuSize, moveTime), buff);
+        break;
+      }
+    case Menu::saParams:
+      std::cout << "Podaj temperaturę początkową: ";
+      std::cin >> saT;
+      std::cout << "Podaj temperaturę końcową: ";
+      std::cin >> tabuTime;
+      std::cout << "Podaj wsp a: ";
+      std::cin >> saa;
+      std::cout << "Podaj sposób generowania sąsiedztwa(1-swap, 2-shift, 3-reverse): ";
+      std::cin >> menuSelect;
+      switch (menuSelect - 1)
+      {
+      case NHood::swap:
+        SAnhood = swap;
+        break;
+      case NHood::shift:
+        SAnhood = shift;
+        break;
+      case NHood::reverse:
+        SAnhood = reverse;
+        break;
+      }
+      break;
+    case Menu::sa:
+      switch (nhood)
+      {
+      case NHood::swap:
+        solve(tsp, new SA<SwapMove>(saT, saTk, saa, 0.8), buff);
+        break;
+      case NHood::shift:
+        solve(tsp, new SA<ShiftMove>(saT, saTk, saa, 0.8), buff);
+        break;
+      case NHood::reverse:
+        solve(tsp, new SA<ReverseMove>(saT, saTk, saa, 0.8), buff);
         break;
       }
       break;
