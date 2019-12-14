@@ -125,7 +125,7 @@ Sąsiedztwo typu \textit{Reverse} generowane jest poprzez odwrócenie kolejnośc
 
 Symulowane wyżarzanie jest metodą, która inspiruje się metalurgią, gdzie powolne wychładzanie stopu pozwala uporządkować jego strukturę, co przekłada się na jego lepsze właściwości.
 Dla problemów optymalizacyjnych polega ona na warunkowym akceptowaniu gorszych rozwiązań, które w przyszłości mogą doprowadzić do lepszego wyniku. Warunek ten określa temperatura, ustalone prawdopodobieństwo i różnica pomiędzy wyszukanym rozwiązaniem, a poprzednim.
-Rozwiązanie to akceptowane jest jeśli jest lepsze niż ostatnie lub obliczona wartość $p$ ze wzoru \ref{eq:5} jest większa niż ustalone prawdopodobieństwo akceptacji. Kolejne rozwiązanie jest generowane losowo używając jednej z definicji sąsiedztwa.
+Rozwiązanie to jest akceptowane jeśli jest lepsze niż ostatnie lub obliczona wartość $p$ ze wzoru \ref{eq:5} jest większa niż ustalone prawdopodobieństwo akceptacji. Kolejne rozwiązanie jest generowane losowo używając jednej z definicji sąsiedztwa.
 \begin{equation}
     \label{eq:5}
     p = \exp^{\left(\dfrac{f(x)-f(y)}{T}\right)}\\
@@ -147,7 +147,7 @@ Może zdarzyć się sytuacja, w której algorytm utknie w pewnym minimum lokalny
 
 \section{Pomiary}
 Algorytmy i system pomiarowy zostały zaimplementowane wykorzystując podejście obiektowe, elementy biblioteki \textit{STL} i wersję \textit{C++17}.
-Pomiarom podlegał wynik w funkcji czasu. Zaimplementowane algorytmy nie posiadają funkcji pomiaru czasu. Bazują one na liczbie iteracji wykonanych do chwili pomiaru.
+Pomiarom podlegał wynik w funkcji czasu określonym liczbą iteracji. Zaimplementowane algorytmy nie posiadają funkcji pomiaru czasu. Bazują one na liczbie iteracji wykonanych do chwili pomiaru.
 
 Pomiary przeprowadzone były dla plików:
 \begin{itemize}[noitemsep]
