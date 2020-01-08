@@ -7,6 +7,9 @@
 #include "methods/SwapMove.hpp"
 #include "methods/ShiftMove.hpp"
 #include "methods/ReverseMove.hpp"
+#include "methods/GA.hpp"
+#include "methods/PmxCross.hpp"
+#include "methods/OxCross.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -22,6 +25,8 @@ enum Menu
   tabu,
   saParams,
   sa,
+  gaParams,
+  ga
 };
 
 enum NHood
@@ -29,6 +34,12 @@ enum NHood
   swap = 0,
   shift,
   reverse
+};
+
+enum CrossMethod
+{
+  pmx = 0,
+  ox,
 };
 
 void printNHood(NHood n)
@@ -47,6 +58,19 @@ void printNHood(NHood n)
   }
 }
 
+void printCrossMethod(CrossMethod c)
+{
+  switch (c)
+  {
+  case CrossMethod::pmx:
+    std::cout << "PMX" << std::endl;
+    break;
+  case CrossMethod::ox:
+    std::cout << "OX" << std::endl;
+    break;
+  }
+}
+
 void displayMenu()
 {
   std::cout << "[0] Wyjdź" << std::endl;
@@ -59,6 +83,8 @@ void displayMenu()
   std::cout << "[7] TabuSearch" << std::endl;
   std::cout << "[8] Parametry SA" << std::endl;
   std::cout << "[9] SA" << std::endl;
+  std::cout << "[10] Parametry GA" << std::endl;
+  std::cout << "[11] GA" << std::endl;
 }
 
 void solve(TSPInstance *tsp, TSPInstanceSolver *solver, std::stringstream &buff)
@@ -77,6 +103,13 @@ void solve(TSPInstance *tsp, TSPInstanceSolver *solver, std::stringstream &buff)
 }
 int main(int argc, char **argv)
 {
+  Route mother;
+  mother.v = {8, 4, 7, 3, 6, 2, 5, 1, 9, 0};
+  Route father;
+  father.v = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  OxCross c = OxCross(3, 7);
+  c.cross(mother, father);
+
   srand(time(NULL));
   std::ifstream f;
   TSPInstance *tsp = nullptr;
@@ -96,6 +129,11 @@ int main(int argc, char **argv)
   float saa = 0.9999;
   NHood SAnhood = swap;
 
+  //GA
+  float pc = 0.8;
+  float pm = 0.01;
+  int population = 100;
+  CrossMethod crossMethod = CrossMethod::pmx;
   while (!exitt)
   {
     system("clear");
@@ -117,6 +155,13 @@ int main(int argc, char **argv)
               << ", wsp a: " << saa << std::endl
               << "Sąsiedztwo: ";
     printNHood(SAnhood);
+    std::cout << std::endl;
+
+    std::cout << "GA - populacja: " << population
+              << ", pc: " << pc
+              << ", pm: " << pm << std::endl
+              << "Krzyżowanie: ";
+    printCrossMethod(crossMethod);
     std::cout << std::endl;
 
     buff.str("");
@@ -234,6 +279,36 @@ int main(int argc, char **argv)
         break;
       case NHood::reverse:
         solve(tsp, new SA<ReverseMove>(saT, saTk, saa, 0.8), buff);
+        break;
+      }
+      break;
+    case Menu::gaParams:
+      std::cout << "Podaj rozmiar populacji: ";
+      std::cin >> population;
+      std::cout << "Podaj pc: ";
+      std::cin >> pc;
+      std::cout << "Podaj wsp a: ";
+      std::cin >> pm;
+      std::cout << "Podaj sposób krzyżowanie(1-pmx, 2-ox): ";
+      std::cin >> menuSelect;
+      switch (menuSelect - 1)
+      {
+      case CrossMethod::pmx:
+        crossMethod = pmx;
+        break;
+      case CrossMethod::ox:
+        crossMethod = ox;
+        break;
+      }
+      break;
+    case Menu::ga:
+      switch (crossMethod)
+      {
+      case CrossMethod::pmx:
+        solve(tsp, new GA<PmxCross>(population, pc, pm), buff);
+        break;
+      case CrossMethod::ox:
+        solve(tsp, new GA<OxCross>(population, pc, pm), buff);
         break;
       }
       break;
