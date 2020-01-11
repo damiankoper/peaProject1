@@ -7,7 +7,10 @@
 #include "methods/SwapMove.hpp"
 #include "methods/ShiftMove.hpp"
 #include "methods/ReverseMove.hpp"
+#include "methods/PmxCross.hpp"
+#include "methods/OxCross.hpp"
 #include "methods/SA.hpp"
+#include "methods/GA.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -45,6 +48,8 @@ void solve(TSPInstance *tsp, TSPInstanceSolver *solver)
 
 int main(int argc, char **argv)
 {
+  srand(time(NULL));
+
   /*  test(new BruteForce(), "BruteForce", 9);
   test(new BnB(), "BnB", 15);
   test(new DP(), "DP", 17); */
@@ -80,7 +85,7 @@ int main(int argc, char **argv)
   solve(tsp, new TabuSearch<ReverseMove>(tabuTime, tabuSize, moveTime));
   f.close(); */
 
-  int saT = 1000;
+  /*   int saT = 1000;
   float saTk = 0.01;
   float saa = 0.9999;
 
@@ -103,6 +108,53 @@ int main(int argc, char **argv)
   solve(tsp, new SA<SwapMove>(saT, saTk, saa, 0.8));
   solve(tsp, new SA<ShiftMove>(saT, saTk, saa, 0.8));
   solve(tsp, new SA<ReverseMove>(saT, saTk, saa, 0.8));
+  f.close(); */
+
+  int population = 100;
+  float pc = 0.8;
+  float pm = 0.01;
+
+  for (int i = 0; i < 3; i++)
+  {
+    /*   f.open("data/ftv47.txt", std::ios::in);
+    tsp = new TSPInstance(f);
+    solve(tsp, new GA<PmxCross>(population, pc, pm, 100000, 1776));
+    solve(tsp, new GA<OxCross>(population, pc, pm, 100000, 1776));
+    f.close();
+
+    f.open("data/ftv170.txt", std::ios::in);
+    tsp = new TSPInstance(f);
+    solve(tsp, new GA<PmxCross>(population, pc, pm, 100000, 2755));
+    solve(tsp, new GA<OxCross>(population, pc, pm, 100000, 2755));
+    f.close(); 
+    f.open("data/rbg403.txt", std::ios::in);
+    tsp = new TSPInstance(f);
+    solve(tsp, new GA<PmxCross>(population, pc, pm, 50000, 2465));
+    solve(tsp, new GA<OxCross>(population, pc, pm, 50000, 2465));
+    f.close();
+    population += 250;
+    */
+  }
+
+  f.open("data/ftv47.txt", std::ios::in);
+  tsp = new TSPInstance(f);
+  solve(tsp, new GA<PmxCross>(350, 0.5, pm, 80000, 1776));
+  solve(tsp, new GA<PmxCross>(350, 0.7, pm, 80000, 1776));
+  solve(tsp, new GA<PmxCross>(350, 0.9, pm, 80000, 1776));
+  f.close();
+
+  f.open("data/ftv170.txt", std::ios::in);
+  tsp = new TSPInstance(f);
+  solve(tsp, new GA<OxCross>(100, 0.5, pm, 80000, 2755));
+  solve(tsp, new GA<OxCross>(100, 0.7, pm, 80000, 2755));
+  solve(tsp, new GA<OxCross>(100, 0.9, pm, 80000, 2755));
+  f.close();
+
+  f.open("data/rbg403.txt", std::ios::in);
+  tsp = new TSPInstance(f);
+  solve(tsp, new GA<PmxCross>(350, 0.5, pm, 50000, 2465));
+  solve(tsp, new GA<PmxCross>(350, 0.7, pm, 50000, 2465));
+  solve(tsp, new GA<PmxCross>(350, 0.9, pm, 50000, 2465));
   f.close();
 
   return 0;
